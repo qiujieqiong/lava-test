@@ -1,8 +1,88 @@
 #!/bin/bash
+if [[ -z "AUTO_LOGIN_USER" ]]; then
+    echo a user name must be given in order to login into destkop >&2
+    exit 1    
+fi
 
+if [[ 0 != $UID ]]; then
+    echo priveledged user is required >&2
+    exit 1
+fi
+
+set -e
+if [[ "$DEBUG" ]]; then
+    PS4="> ${0##*/}: "
+    set -x
+fi
+
+systemctl is-active lightdm >/dev/null && systemctl stop lightdm || true
+
+trap 'eval $cleanup_acts' EXIT
+
+# prepare end of laucnhing lock for notifying the test procedure is finished
+eol_lock=$(mktemp -u /tmp/XXXXXX)
+mkfifo "$eol_lock"
+chown $AUTO_LOGIN_USER "$eol_lock"
+cleanup_acts="unlink '$eol_lock'; $cleanup_acts"
+
+# stop time measurement by autostart mechanism
+echo "[Desktop Entry]
+Name=End Of Launching Notification
+Type=Application
+Exec=/bin/bash -c '/bin/date +%%s.%%N >$eol_lock'
+" >/etc/xdg/autostart/end-of-launching.desktop
+cleanup_acts="unlink '/etc/xdg/autostart/end-of-launching.desktop'; $cleanup_acts"
+
+# collect information by ftrace
+if [[ "$TRACE_FILE" ]]; then
+    pushd /sys/kernel/debug/tracing >/dev/null
+    echo sched:sched_process_fork >set_event
+    echo sched:sched_process_exec >>set_event
+    echo sched:sched_process_exit >>set_event
+    echo sched:sched_wakeup >>set_event
+    echo sched:sched_switch >>set_event
+    echo timer:timer_init >>set_event
+    echo timer:timer_start >>set_event
+    echo timer:timer_expire_entry >>set_event
+    echo timer:timer_expire_exit >>set_event
+    echo timer:hrtimer_start >>set_event
+    echo timer:hrtimer_expire_entry >>set_event
+    echo timer:hrtimer_expire_exit >>set_event
+    echo timer:itimer_expire >>set_event
+    echo workqueue >>set_event
+    echo power >>set_event
+    echo irq >>set_event
+    echo $((32 * 1024)) >buffer_size_kb
+    echo >trace
+    echo 1 >tracing_on
+    cleanup_acts="echo >/sys/kernel/debug/tracing/trace; $cleanup_acts"
+    cleanup_acts="echo 0 >/sys/kernel/debug/tracing/tracing_on; $cleanup_acts"
+fi
+
+# before launching DDE, drop pagecache
+start_time=$(date +%s.%N)
+echo 1 >/proc/sys/vm/drop_caches
+systemctl start lightdm
+
+# wait for the launching of desktop till timeout
+read end_time <$eol_lock
+
+duration=$(echo "$end_time-$start_time" | bc)
+
+# stop tracing and get log from kernel ring buffer
+if [[ "$TRACE_FILE" ]]; then
+    echo 0 >tracing_on
+    echo -e "# $duration\n" >"$TRACE_FILE"
+    cat trace >>"$TRACE_FILE"
+    popd >/dev/null
+fi
+
+set +x
+echo $duration
+
+ps aux |grep dde-dock|grep -v grep
 ls -ahl /home
+export DISPLAY=:0
 cd /home/$AUTO_LOGIN_USER && sudo xauth generate :0 . trusted
 ls -ahl /home/$AUTO_LOGIN_USER
-env
-export DISPLAY=:0
 env
