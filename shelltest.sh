@@ -33,31 +33,7 @@ Exec=/bin/bash -c '/bin/date +%%s.%%N >$eol_lock'
 " >/etc/xdg/autostart/end-of-launching.desktop
 cleanup_acts="unlink '/etc/xdg/autostart/end-of-launching.desktop'; $cleanup_acts"
 
-# collect information by ftrace
-if [[ "$TRACE_FILE" ]]; then
-    pushd /sys/kernel/debug/tracing >/dev/null
-    echo sched:sched_process_fork >set_event
-    echo sched:sched_process_exec >>set_event
-    echo sched:sched_process_exit >>set_event
-    echo sched:sched_wakeup >>set_event
-    echo sched:sched_switch >>set_event
-    echo timer:timer_init >>set_event
-    echo timer:timer_start >>set_event
-    echo timer:timer_expire_entry >>set_event
-    echo timer:timer_expire_exit >>set_event
-    echo timer:hrtimer_start >>set_event
-    echo timer:hrtimer_expire_entry >>set_event
-    echo timer:hrtimer_expire_exit >>set_event
-    echo timer:itimer_expire >>set_event
-    echo workqueue >>set_event
-    echo power >>set_event
-    echo irq >>set_event
-    echo $((32 * 1024)) >buffer_size_kb
-    echo >trace
-    echo 1 >tracing_on
-    cleanup_acts="echo >/sys/kernel/debug/tracing/trace; $cleanup_acts"
-    cleanup_acts="echo 0 >/sys/kernel/debug/tracing/tracing_on; $cleanup_acts"
-fi
+
 
 # before launching DDE, drop pagecache
 start_time=$(date +%s.%N)
@@ -69,14 +45,7 @@ read end_time <$eol_lock
 
 duration=$(echo "$end_time-$start_time" | bc)
 
-# stop tracing and get log from kernel ring buffer
-if [[ "$TRACE_FILE" ]]; then
-    echo 0 >tracing_on
-    echo -e "# $duration\n" >"$TRACE_FILE"
-    cat trace >>"$TRACE_FILE"
-    popd >/dev/null
-fi
-
+echo $end_time
 
 echo $duration
 
