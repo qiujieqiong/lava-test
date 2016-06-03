@@ -55,10 +55,9 @@ export DISPLAY=:0
 export $(dbus-launch)
 systemctl status dbus.service
 systemctl status dbus.socket
-cat /etc/machine-id
-ls /var/run/dbus
-ls -ahl /home/$AUTO_LOGIN_USER
+xhost +
 cd /home/$AUTO_LOGIN_USER && git clone https://cr.deepin.io/autotest/dbus
+ls -ahl /home/$AUTO_LOGIN_USER
 env
 python dbus/runall.py
 cat test.result
