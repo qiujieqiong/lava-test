@@ -26,4 +26,4 @@ install:
 run:
     steps:
         - "export AUTO_LOGIN_USER"
-        - bash shelltest.sh
+        - DEBUG=yes timeout 180 bash shelltest.sh
