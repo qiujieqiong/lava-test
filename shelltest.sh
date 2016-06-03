@@ -56,4 +56,5 @@ ls -ahl /home/$AUTO_LOGIN_USER
 cd /home/$AUTO_LOGIN_USER && git clone https://cr.deepin.io/autotest/dbus
 env
 python dbus/runall.py
+cat test.result
 set +x
