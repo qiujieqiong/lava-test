@@ -55,9 +55,7 @@ export DISPLAY=:0
 export $(dbus-launch)
 systemctl status dbus.service
 systemctl status dbus.socket
-uname -a
-hostnamectl set-hostname localhost
-xhost +
+
 cd /home/$AUTO_LOGIN_USER && git clone https://cr.deepin.io/autotest/dbus
 ls -ahl /home/$AUTO_LOGIN_USER
 env
