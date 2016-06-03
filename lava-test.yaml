@@ -15,6 +15,8 @@ params:
     AUTO_LOGIN_USER: deepin
 
 install:
+    deps:
+        - bc
     steps:
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
