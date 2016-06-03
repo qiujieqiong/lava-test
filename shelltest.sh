@@ -52,7 +52,8 @@ echo $duration
 ps aux |grep dde-dock|grep -v grep
 ls -ahl /home
 export DISPLAY=:0
-cd /home/$AUTO_LOGIN_USER && sudo xauth generate :0 . trusted
 ls -ahl /home/$AUTO_LOGIN_USER
+cd /home/$AUTO_LOGIN_USER && git clone https://cr.deepin.io/autotest/dbus
 env
+python dbus/runall.py
 set +x

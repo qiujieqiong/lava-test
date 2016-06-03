@@ -16,7 +16,7 @@ params:
 
 install:
     deps:
-        - bc
+        - git
     steps:
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
