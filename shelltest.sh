@@ -77,7 +77,7 @@ if [[ "$TRACE_FILE" ]]; then
     popd >/dev/null
 fi
 
-set +x
+
 echo $duration
 
 ps aux |grep dde-dock|grep -v grep
@@ -86,3 +86,4 @@ export DISPLAY=:0
 cd /home/$AUTO_LOGIN_USER && sudo xauth generate :0 . trusted
 ls -ahl /home/$AUTO_LOGIN_USER
 env
+set +x
