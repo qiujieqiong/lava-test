@@ -50,7 +50,7 @@ echo $end_time
 echo $duration
 
 ps aux |grep dde-dock|grep -v grep
-sudo -u $AUTO_LOGIN_USER <<EOF
+su - $AUTO_LOGIN_USER <<EOF
 export DISPLAY=:0
 export $(dbus-launch) 
 env 
