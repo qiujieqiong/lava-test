@@ -1,0 +1,19 @@
+metadata:
+    name: get-dir
+    format: "Lava-Test-Shell Test Definition 1.0"
+    description: "Get hardware information"
+    os:
+        - ubuntu
+    devices:
+        - vm1
+    scope:
+        - none
+    environment:
+        - lava-test-shell
+
+install:
+
+
+run:
+    steps:
+        - ./shelltest.sh
