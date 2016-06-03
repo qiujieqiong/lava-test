@@ -33,7 +33,7 @@
             }
         }
     ],
-    "device_type": "x86_skip_ipxe",
+    "target": "103",
     "job_name": "lava-test",
     "timeout": 18000
 }

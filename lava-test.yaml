@@ -1,7 +1,7 @@
 metadata:
-    name: get-dir
+    name: auto-login
     format: "Lava-Test-Shell Test Definition 1.0"
-    description: "Get hardware information"
+    description: "A Test Definition To Auto Login"
     os:
         - ubuntu
     devices:
@@ -11,9 +11,19 @@ metadata:
     environment:
         - lava-test-shell
 
-install:
+params:
+    AUTO_LOGIN_USER: deepin
 
+install:
+    deps:
+        - bc
+    steps:
+        - "mkdir -p /etc/lightdm/lightdm.conf.d"
+        - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
+        - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
+        - "useradd -m deepin"
 
 run:
     steps:
+        - "export AUTO_LOGIN_USER"
         - ./shelltest.sh

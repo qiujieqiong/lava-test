@@ -1,2 +1,3 @@
-ls
-env
+#!/bin/bash
+
+ls /home
