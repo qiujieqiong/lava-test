@@ -50,5 +50,13 @@ echo $end_time
 echo $duration
 
 ps aux |grep dde-dock|grep -v grep
-sudo -u $AUTO_LOGIN_USER export $(dbus-launch) && env && cd /home/$AUTO_LOGIN_USER && git clone https://cr.deepin.io/autotest/dbus
- && ls -ahl /home/$AUTO_LOGIN_USER && python dbus/runall.py && cat test.result
+sudo -u $AUTO_LOGIN_USER <<EOF
+export DISPLAY=:0
+export $(dbus-launch) 
+env 
+cd /home/$AUTO_LOGIN_USER
+git clone https://cr.deepin.io/autotest/dbus
+ls -ahl /home/$AUTO_LOGIN_USER
+python dbus/runall.py
+cat test.result
+EOF
