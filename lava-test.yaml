@@ -27,6 +27,6 @@ run:
     steps:
         - "export AUTO_LOGIN_USER"
         - DEBUG=yes timeout 180 bash shelltest.sh
-        - echo test >a.txt
+        - echo "test">a.txt
         - ls -ahl
         - lava-test-run-attach a.txt text/plain
