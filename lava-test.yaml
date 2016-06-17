@@ -34,4 +34,5 @@ run:
         - DEBUG=yes timeout 180 bash RunCases.sh
         - echo "test">a.txt
         - ls -ahl
+        - cat test.result
         - lava-test-run-attach a.txt text/plain

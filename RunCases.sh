@@ -29,7 +29,8 @@ env
 cd /home/$AUTO_LOGIN_USER
 git clone https://github.com/qiujieqiong/testlink-robotframework-integration
 ls -ahl /home/$AUTO_LOGIN_USER
-cd testlink-robotframework-integration/checklist/launcher
-pybot -i start_up launcher.txt
+pybot testlink-robotframework-integration/launcher.txt
+ls -ahl
+cat test.result
 EOF
 fi
