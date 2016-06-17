@@ -33,6 +33,7 @@ run:
         - "export CASE_ID"
         - DEBUG=yes timeout 180 bash RunCases.sh
         - echo "test">a.txt
+        - cp /home/$AUTO_LOGIN_USER/test.result .
         - ls -ahl
         - cat test.result
-        - lava-test-run-attach a.txt text/plain
+        - lava-test-run-attach test.result text/plain
