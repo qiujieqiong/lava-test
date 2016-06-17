@@ -14,7 +14,7 @@ if [[ "$DEBUG" ]]; then
     PS4="> ${0##*/}: "
     set -x
 fi
-
+echo $CASE_ID
 systemctl is-active lightdm >/dev/null && systemctl stop lightdm || true
 
 
@@ -26,7 +26,7 @@ if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
 export DISPLAY=:0
 env 
-cd /home/$AUTO_LOGIN_USER
+echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/testlink-robotframework-integration
 ls -ahl /home/$AUTO_LOGIN_USER
 pybot testlink-robotframework-integration/launcher.txt
