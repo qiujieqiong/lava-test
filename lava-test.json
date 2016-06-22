@@ -37,6 +37,6 @@
         }
     ],
     "target": "102",
-    "job_name": "lava-test",
+    "job_name": "run-robotframework",
     "timeout": 18000
 }
