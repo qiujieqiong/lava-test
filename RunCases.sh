@@ -19,17 +19,17 @@ systemctl is-active lightdm >/dev/null && systemctl stop lightdm || true
 
 
 systemctl start lightdm
-sleep 50
+sleep 30
 # wait for the launching of desktop till timeout
 ps aux |grep dde-dock |grep -v grep
 if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
 export DISPLAY=:0
 env 
-bash install.sh
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
 ls -ahl /home/$AUTO_LOGIN_USER
+bash lava-test/install.sh
 pybot lava-test/launcher.txt
 ls -ahl
 cat test.result
