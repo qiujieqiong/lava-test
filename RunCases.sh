@@ -26,10 +26,11 @@ if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
 export DISPLAY=:0
 env 
+pip install pyautogui
 echo $CASE_ID > casesID.txt
-git clone https://github.com/qiujieqiong/testlink-robotframework-integration
+git clone https://github.com/qiujieqiong/lava-test
 ls -ahl /home/$AUTO_LOGIN_USER
-pybot testlink-robotframework-integration/launcher.txt
+pybot lava-test/launcher.txt
 ls -ahl
 cat test.result
 EOF

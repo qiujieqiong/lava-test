@@ -18,10 +18,13 @@ install:
     deps:
         - git
         - python-pip
+        - python-tk
+        - scrot
     steps:
         - pip install -U setuptools
         - pip install robotframework
         - pip install PyUserInput
+        - pip install pyautogui
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
@@ -31,8 +34,7 @@ run:
     steps:
         - "export AUTO_LOGIN_USER"
         - "export CASE_ID"
-        - DEBUG=yes timeout 180 bash RunCases.sh
-        - echo "test">a.txt
+        - DEBUG=yes bash RunCases.sh
         - cp /home/$AUTO_LOGIN_USER/test.result .
         - cp /home/$AUTO_LOGIN_USER/log.html .
         - ls -ahl

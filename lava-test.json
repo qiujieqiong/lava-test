@@ -36,7 +36,7 @@
             }
         }
     ],
-    "target": "104",
+    "target": "102",
     "job_name": "lava-test",
     "timeout": 18000
 }
