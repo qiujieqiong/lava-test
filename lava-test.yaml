@@ -1,7 +1,7 @@
 metadata:
-    name: auto-login
+    name: run-rf-cases
     format: "Lava-Test-Shell Test Definition 1.0"
-    description: "A Test Definition To Auto Login"
+    description: "A Test Definition To Run Robotframework Cases"
     os:
         - ubuntu
     devices:
