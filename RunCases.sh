@@ -32,7 +32,7 @@ ls -ahl /home/$AUTO_LOGIN_USER
 whereis expect
 expect -c 'spawn sudo pip install pyautogui
 			expect \"deepin:\"
-			send \"\n\"
+			send \"password\n\"
 			expect eof 
 			interact
 			'
