@@ -29,13 +29,7 @@ env
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
 ls -ahl /home/$AUTO_LOGIN_USER
-whereis expect
-expect -c 'spawn sudo pip install pyautogui
-			expect \"deepin:\"
-			send \"password\n\"
-			expect eof 
-			interact
-			'
+echo "password" |sudo -S pip install pyautogui
 pybot lava-test/launcher.txt
 ls -ahl
 cat test.result
