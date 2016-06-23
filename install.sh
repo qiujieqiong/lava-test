@@ -2,5 +2,5 @@
 
 spawn sudo pip install pyautogui
 expect "deepin:"
-send "\n"
+send "\n" 
 interact
