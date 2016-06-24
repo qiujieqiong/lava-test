@@ -34,7 +34,7 @@ install:
         - cat /etc/sudoers
         - cat /etc/group
         - gpasswd -a deepin sudo
-        - bash -c 'echo "deepin  ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers'
+        - 'bash -c "echo \'deepin  ALL=(ALL) NOPASSWD: ALL\' >>/etc/sudoers"'
         - cat /etc/sudoers
         - cat /etc/group
 
