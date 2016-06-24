@@ -28,8 +28,8 @@ install:
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
-        - "useradd -m deepin"
-        - bash install.sh
+        - useradd -m deepin
+        - bash nopaswd.sh
 
 run:
     steps:
