@@ -30,8 +30,12 @@ install:
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - "useradd -m deepin"
         - 'bash -c "echo "root:password" | chpasswd"'
-        - 'bash -c "echo "deepin  ALL=(ALL:ALL) ALL">>/etc/sudoers"'
         - cat /etc/sudoers
+        - cat /etc/group
+        - adduser deepin root
+        - sed -i '/%sudo    ALL=(ALL:ALL) ALL/ a "deepin    ALL=(ALL:ALL) ALL"' /etc/sudoers
+        - cat /etc/sudoers
+        - cat /etc/group
 
 run:
     steps:
