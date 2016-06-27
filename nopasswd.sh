@@ -1,6 +1,6 @@
 #!/bin/bash
 
-usermod -aG deepin sudo
+usermod -aG sudo deepin
 echo "deepin  ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
 
 cat /etc/sudoers
