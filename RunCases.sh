@@ -1,7 +1,7 @@
 #!/bin/bash
 if [[ -z "AUTO_LOGIN_USER" ]]; then
     echo a user name must be given in order to login into destkop >&2
-    exit 1    
+    exit 1
 fi
 
 if [[ 0 != $UID ]]; then
@@ -25,11 +25,11 @@ ps aux |grep dde-dock |grep -v grep
 if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
 export DISPLAY=:0
-env 
+env
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
 ls -ahl /home/$AUTO_LOGIN_USER
-sudo pip install pyautogui
+sudo pip install -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
 ls -ahl
 cat test.result
