@@ -21,8 +21,9 @@ install:
         - python-tk
         - scrot
     steps:
-        - pip install -i http://pypi.douban.com/simple/ -U pip
-        - pip install -i http://pypi.douban.com/simple/ -U setuptools
+        - echo "http://pypi.douban.com/simple/" >> /etc/apt/sources.list
+        - pip install -U pip
+        - pip install -U setuptools
         - pip install robotframework
         - pip install PyUserInput
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
