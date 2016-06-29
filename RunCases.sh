@@ -24,6 +24,7 @@ sleep 30
 ps aux |grep dde-dock |grep -v grep
 if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
+cat /etc/apt/sources.list
 export DISPLAY=:0
 env
 echo $CASE_ID > casesID.txt
