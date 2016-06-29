@@ -21,7 +21,6 @@ install:
         - python-tk
         - scrot
     steps:
-        - echo "http://pypi.douban.com/simple/" >> /etc/apt/sources.list
         - pip install -U pip
         - pip install -U setuptools
         - pip install robotframework
@@ -30,6 +29,7 @@ install:
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - useradd -m deepin
+        - bash chpasswd.sh
 
 
 run:
