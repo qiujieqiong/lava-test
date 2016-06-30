@@ -6,4 +6,4 @@ groups deepin
 usermod -aG sudo deepin
 id deepin
 groups deepin
-echo deepin:newpassword |chpasswd
+passwd deepin -d
