@@ -7,4 +7,4 @@ usermod -aG sudo deepin
 id deepin
 groups deepin
 whereis chpasswd
-echo deepin:newpassword|chpasswd
+echo $1 |chpasswd
