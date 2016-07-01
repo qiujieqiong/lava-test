@@ -18,7 +18,6 @@ echo $CASE_ID
 systemctl is-active lightdm >/dev/null && systemctl stop lightdm || true
 
 env
-cp /home/deepin/.Xauthority .
 ls -ahl
 ls /home
 systemctl start lightdm
@@ -35,6 +34,8 @@ git clone https://github.com/qiujieqiong/lava-test
 ls -ahl
 groups
 id
+sudo cp .Xauthority /root
+ls -ahl /root
 sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
 cat test.result
