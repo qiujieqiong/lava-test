@@ -35,7 +35,8 @@ ls -ahl
 sudo cp .Xauthority /root
 sudo ls -ahl /root
 sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
-pybot lava-test/launcher.txt
-cat test.result
+cd lava-test
+pybot launcher.txt
+cat lava-test/test.result
 EOF
 fi
