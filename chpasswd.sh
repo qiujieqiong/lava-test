@@ -1,10 +1,9 @@
-#!/bin/bash
+#!/usr/bin/expect
 
 set -x
-id deepin
-groups deepin
-usermod -aG sudo deepin
-id deepin
-groups deepin
-whereis chpasswd
-echo $1 |chpasswd
+spawn passwd deepin
+expect "password:"
+send "newpassword\n"
+expect "password:"
+send "newpassword\n"
+interact
