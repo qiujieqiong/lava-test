@@ -33,7 +33,7 @@ git clone https://github.com/qiujieqiong/lava-test
 ls -ahl
 groups
 id
-sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
+pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
 ls -ahl
 cat test.result
