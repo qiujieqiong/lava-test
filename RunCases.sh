@@ -37,6 +37,8 @@ sudo ls -ahl /root
 sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 cd lava-test
 pybot launcher.txt
+ls -ahl lava-test
+ls -ahl /home/$AUTO_LOGIN_USER
 cat lava-test/test.result
 EOF
 fi
