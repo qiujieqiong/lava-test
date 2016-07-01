@@ -25,13 +25,13 @@ sleep 30
 ps aux |grep dde-dock |grep -v grep
 if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
-cat /etc/apt/sources.list
+
 export DISPLAY=:0
 env
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
 ls -ahl /home/$AUTO_LOGIN_USER
-sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
+pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
 ls -ahl
 cat test.result
