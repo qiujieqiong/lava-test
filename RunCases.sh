@@ -32,6 +32,8 @@ env
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
 ls -ahl
+sudo cp .Xauthority /root
+sudo ls -ahl /root
 sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
 cat test.result
