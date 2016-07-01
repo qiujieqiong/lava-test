@@ -30,7 +30,7 @@ export DISPLAY=:0
 env
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
-ls -ahl /home/$AUTO_LOGIN_USER
+ls -ahl 
 pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
 ls -ahl
