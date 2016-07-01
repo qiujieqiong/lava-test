@@ -17,9 +17,6 @@ params:
 install:
 
     steps:
-        - #pip install --disable-pip-version-check --trusted-host  pypi.douban.com -i http://pypi.douban.com/simple/ setuptools
-        - #pip install --disable-pip-version-check --trusted-host  pypi.douban.com -i http://pypi.douban.com/simple/ robotframework
-        - #pip install --disable-pip-version-check --trusted-host  pypi.douban.com -i http://pypi.douban.com/simple/ pyuserinput
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
