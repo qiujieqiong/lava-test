@@ -22,6 +22,7 @@ install:
         - scrot
 
     steps:
+        - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U setuptools
         - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ robotframework
         - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyuserinput
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
@@ -43,7 +44,5 @@ run:
         - AUTO_LOGIN_USER=deepin DEBUG=yes bash RunCases.sh
         - cp /home/$AUTO_LOGIN_USER/test.result .
         - cp /home/$AUTO_LOGIN_USER/log.html .
-        - ls -ahl
-        - cat test.result
         - lava-test-run-attach test.result text/plain
         - lava-test-run-attach log.html text/plain

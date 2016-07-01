@@ -35,7 +35,6 @@ groups
 id
 pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 pybot lava-test/launcher.txt
-ls -ahl
 cat test.result
 EOF
 fi
