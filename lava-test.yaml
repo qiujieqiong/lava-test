@@ -15,11 +15,7 @@ params:
     AUTO_LOGIN_USER: deepin
 
 install:
-    deps:
-        - git
-        - python-pip
-        - python-tk
-        - scrot
+
     steps:
         - pip install --disable-pip-version-check --trusted-host  pypi.douban.com -i http://pypi.douban.com/simple/ setuptools
         - pip install --disable-pip-version-check --trusted-host  pypi.douban.com -i http://pypi.douban.com/simple/ robotframework
@@ -27,11 +23,9 @@ install:
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
-        - id
-        - groups
-        - useradd -G sudo -m deepin
-        - id
-        - groups
+        - useradd -G root -m deepin
+        - id deepin
+        - groups deepin
         - cat /etc/lightdm/lightdm.conf.d/auto-login.conf
 
 
