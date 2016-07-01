@@ -42,7 +42,7 @@ run:
         - "export AUTO_LOGIN_USER"
         - "export CASE_ID"
         - AUTO_LOGIN_USER=deepin DEBUG=yes bash RunCases.sh
-        - cp /home/$AUTO_LOGIN_USER/lava-test/.result .
+        - cp /home/$AUTO_LOGIN_USER/lava-test/test.result .
         - cp /home/$AUTO_LOGIN_USER/lava-test/log.html .
         - lava-test-run-attach test.result text/plain
         - lava-test-run-attach log.html text/plain
