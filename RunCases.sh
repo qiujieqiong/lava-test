@@ -18,6 +18,7 @@ echo $CASE_ID
 systemctl is-active lightdm >/dev/null && systemctl stop lightdm || true
 
 env
+ls /home
 systemctl start lightdm
 sleep 30
 # wait for the launching of desktop till timeout
