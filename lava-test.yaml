@@ -35,7 +35,7 @@ run:
     steps:
         - "export AUTO_LOGIN_USER"
         - "export CASE_ID"
-        - DEBUG=yes bash RunCases.sh
+        - AUTO_LOGIN_USER=deepin DEBUG=yes bash RunCases.sh
         - cp /home/$AUTO_LOGIN_USER/test.result .
         - cp /home/$AUTO_LOGIN_USER/log.html .
         - ls -ahl
