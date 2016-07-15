@@ -28,6 +28,7 @@ if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
 
 export DISPLAY=:0
+export CASE_ID
 env
 echo $CASE_ID > casesID.txt
 git clone https://github.com/qiujieqiong/lava-test
@@ -36,7 +37,10 @@ sudo cp .Xauthority /root
 sudo ls -ahl /root
 sudo pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyautogui
 cd lava-test
-pybot launcher.txt
+for caseid in $CASE_ID
+do
+pybot -i caseid launcher.txt
+done
 ls -ahl /home/$AUTO_LOGIN_USER/lava-test
 ls -ahl /home/$AUTO_LOGIN_USER
 cat /home/$AUTO_LOGIN_USER/lava-test/test.result

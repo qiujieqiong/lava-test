@@ -57,11 +57,13 @@ ${terminal_needle}	needles/terminal.png
 ${sudo_needle}	needles/sudo.png
 ${terminal_input}	needles/terminal_input.png
 ${exist_progress}	ps aux |grep deepin-movie
-${exist_in_desktop}	ls ~/Desktop
+${exist_in_desktop}	ls ~/桌面
 ${exist_in_dock}	gsettings get com.deepin.dde.dock docked-apps
 ${exist_in_boot}		cat ~/.config/autostart/deepin-movie.desktop |grep Hidden
 ${exist_in_system}		dpkg -s deepin-movie |grep Version
 ${exist_app}	dpkg -l |grep deepin-movie
+${launcher_classification} 	gsettings get com.deepin.dde.launcher display-mode
+${dock_display_mode} 	gsettings get com.deepin.dde.dock display-mode
 ${install_deepin-movie}	sudo apt-get install -y deepin-movie\n
 ${removeconfig}           rm -f ~/.config/deepin-movie/config.ini
 ${remove_autostart_file}	rm -f ~/.config/autostart/deepin-movie.desktop
@@ -92,8 +94,8 @@ Get CasesID
 
 Create Result File
 	Create File 	test.result
-	${casesID} 		GetInfo.getCasesID
-	#@{casesID}		Create List 	1 	3 	5 	6 	21 	2 	9
+	#${casesID} 		GetInfo.getCasesID
+	@{casesID}		Create List 	57636 57646 57649 57652 57720 57722 57724
 	${length} 		Get Length 	${casesID}
 	Log 			${length}
 	Log List 		${casesID}
@@ -117,6 +119,13 @@ Mouse Hide
 	@{mouse_hide}		Create List 	${mouse_hide_x}	${mouse_hide_y}
 	pyautogui.moveTo	@{mouse_hide}
 
+Mouse Move To LeftDown
+	${screen_pixels}	pyautogui.size
+	${left}		Evaluate 	int(0)
+	${down} 	Evaluate 	int(${screen_pixels}[1])
+	@{left_down}		Create List 	${left}	${down}
+	pyautogui.moveTo	@{left_down}
+
 Send Single Key
 	[arguments]	${key}
 	${key}	Encode String To Bytes	${key}	UTF-8
@@ -126,36 +135,220 @@ Send Single Key
 	#GetInfo.send_single_key 	${key}
 
 Mouse Left Click
-	[arguments]	${coor}
-	GetInfo.click 	${coor[0]}	${coor[1]}
+	[arguments]	@{coor}
+	#GetInfo.click 	${coor[0]}	${coor[1]}
+	pyautogui.click 	@{coor}
 
 Mouse Right Click
-	[arguments]	${coor}
-	GetInfo.right_click 	${coor[0]}	${coor[1]}
+	[arguments]	@{coor}
+	#GetInfo.right_click 	${coor[0]}	${coor[1]}
+	pyautogui.rightClick 	@{coor}
 
-Open Launcher
+ScreenShot
+	[arguments]	${png}
+	pyautogui.screenshot 	${png}
+
+Open Launcher By Click Icon
+	@{coor}		GetInfo.getlauncherCoor
+	Mouse Left Click 	@{coor}
+	Sleep	2
+	Assert Window Name 		dde-launcher
+
+Open Launcher By Press Win_key
 	Send Single key	${win_key}
 	Sleep	2
-	Assert Screen	${launcher_needle}
-	#Assert Window Name 		dde-launcher
+	#Assert Screen	${launcher_needle}
+	Assert Window Name 		dde-launcher
+	ScreenShot 		launcher.png
+
+Open Launcher By HotArea
+	@{centercoor} 	GetInfo.getCenterScreenCoor
+	pyautogui.rightClick 	@{centercoor}
+	sleep 	1
+	Send Single Key 	c
+	sleep 	1
+	ScreenShot 	hotarea.png
+	Mouse Move To LeftDown
+	sleep 	1
+	@{coor}		GetInfo.getHotAreaLauncherCoor
+	pyautogui.click 	@{coor}
+	ScreenShot 	hotareaSetted.png
+	Send Single Key 	${esc_key}
+	Mouse Move To LeftDown
+	sleep 	1
+	Assert Window Name 		dde-launcher
+
+
+Open Launcher By Cmd
+	pyautogui.hotkey 	@{open_terminal}
+	sleep 	2
+	Assert Window Name 		深度终端
+	Sleep	2
+	pyautogui.typewrite 	dde-launcher\n 		interval=0.25
+	Sleep	2
+	Assert Window Name 		dde-launcher
+
 
 Exit Launcher
 	${windowname}		Run 		${getwindowname}
 	Run Keyword If 		'${windowname}' == 'dde-launcher' 		Send Single Key 	${esc_key}
 
-Open Launcher And Search APP
-	[arguments]	${needle_name}
-	Sleep 	2
-	Mouse Hide
-	Sleep 	2
+Open Launcher And Open Menu
+	#Sleep 	2
+	#Mouse Hide
+	Sleep 	1
 	Send Single key	${win_key}
 	Sleep	2
 	#Assert Screen	${launcher_needle}
 	Assert Window Name 		dde-launcher
 	Sleep 	2
-	pyautogui.typewrite	${movie_app_name}
-	Sleep 	8
-	Assert Screen 	${needle_name}
+	pyautogui.typewrite	${movie_app_name} 	interval=0.25
+	Sleep 	2
+	#Assert Screen 	${needle_name}
+	@{coor}		GetInfo.getIconInLauncher
+	Mouse Right Click 	@{coor}
+
+
+Menu Open
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	sleep 	6
+	Assert Window Name 		深度影院
+
+Menu Send To Desktop
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	${output}  	Run 		${exist_in_desktop}
+	Should Contain 		${output}		deepin-movie.desktop
+
+Menu Remove From Desktop
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	${output}  	Run 		${exist_in_desktop}
+	Should Not Contain 		${output}		deepin-movie.desktop
+
+Menu Remove From Dock
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	${output}  	Run 		${exist_in_dock}
+	Should Not Contain 	${output} 	deepin-movie
+
+Menu Send To Dock
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	${output}  	Run 		${exist_in_dock}
+	Should Contain 			${output} 	deepin-movie
+
+Menu Add To Boot
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	${output}  	Run 		${exist_in_boot}
+	Should Be Equal 	${output} 	Hidden=false
+
+Menu Remove From Boot
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	${output}  	Run 		${exist_in_boot}
+	Should Be Equal 	${output} 	Hidden=true
+
+Menu Uninstall
+	Open Launcher And Open Menu
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+	@{coor} 	GetInfo.getUninstallBtnCoor
+	sleep 	1
+	pyautogui.moveTo 		@{coor}
+	ScreenShot 		hoverUninstallBtn.png
+	pyautogui.click 		@{coor}
+	sleep 	5
+	${output}  	Run 		${exist_app}
+	Should Be Empty 		${output}
+
+Switch To Efficient Mode
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+
+Switch To Classic Mode
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+
+Switch To Fashion Mode
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
 
 Right Key Menu Click
 	[arguments]	${app_needle}	${needle_name}
@@ -263,6 +456,7 @@ Write Pass Result To File
 Write Fail Result To File
 	[arguments]	${caseid}
 	Append To File  	test.result 	${caseid} Fail\n
+	ScreenShot 				${caseid}.png
 
 Write Result
 	[arguments]	${caseid}
@@ -271,66 +465,76 @@ Write Result
 
 *** Test Cases ***
 Test Launcher Start-up
-	#[Tags]	${case1id}
-	#[Setup]	Get CasesID
-	#${casesID} 	Get CasesID
-	[Tags]	${casesID[0]}
-	Open Launcher
+	[Tags]	23264
+	Open Launcher By Click Icon
 	Exit Launcher
-
-	[Teardown]	Write Result	${casesID[0]}
-
-Test Launcher Search APP
-	#[Tags]	${case2id}
-	#[Setup]	Get CasesID
-	#@{casesID} 	Get CasesID
-	[Tags]	${casesID[1]}
-	#Open Launcher And Search APP 	${movie_icon_needle}
-	Open Launcher
+	Open Launcher By Press Win_key
 	Exit Launcher
-	[Teardown]	Write Result	${casesID[1]}
-
-Test Launcher Right Key Menu Open
-	#[Tags]	${case3id}
-	#[Setup]	Get CasesID
-	#@{casesID} 	Get CasesID
-	[Tags]	${casesID[2]}
-	Open Launcher
+	Open Launcher By HotArea
 	Exit Launcher
-	[Teardown]	Write Result	${casesID[2]}
-
-Test Launcher Right Key Menu Desktop
-	#[Tags]	${case4id}
-	#[Setup]	Get CasesID
-	#@{casesID} 	Get CasesID
-	[Tags]	${casesID[3]}
-	Open Launcher
+	Open Launcher By Cmd
 	Exit Launcher
-	[Teardown]	Write Result	${casesID[3]}
+	[Teardown]	Write Result	23264
 
-Test Launcher Right Key Menu Dock
-	#[Tags]	${case5id}
-	#[Setup]	Get CasesID
-	#@{casesID} 	Get CasesID
-	[Tags]	${casesID[4]}
-	Open Launcher
+
+Test Launcher Operation
+	[Tags]	23274
+	Menu Open
+	Menu Send To Desktop
 	Exit Launcher
-	[Teardown]	Write Result	${casesID[4]}
+	Menu Remove From Desktop
+	Exit Launcher
+	#Menu Remove From Dock
+	#Exit Launcher
+	#Menu Send To Dock
+	#Exit Launcher
+	Menu Add To Boot
+	Exit Launcher
+	Menu Remove From Boot
+	Exit Launcher
+	Menu Uninstall
+	Exit Launcher
+	[Teardown]	Write Result	23274
+
+
+Test Launcher Classification
+	[Tags] 	23286
+	Open Launcher By Press Win_key
+	@{coor}			GetInfo.getClassificationIconCoor
+	Mouse Left Click 		@{coor}
+	${output} 	Run 	${launcher_classification}
+	Should Be Equal 	${output} 	\'category\'
+	sleep 	2
+	Mouse Left Click 		@{coor}
+	${output} 	Run 	${launcher_classification}
+	Should Be Equal 	${output} 	\'free\'
+	Exit Launcher
+	[Teardown]	Write Result	23286
+
+Test Dock Switch Mode
+	[Tags]	23293
+	Switch To Efficient Mode
+	sleep 	1
+	${output}			Run 	${dock_display_mode}
+	Should Be Equal 		${output} 	\'efficient\'
+	Switch To Classic Mode
+	sleep 	1
+	${output}			Run 	${dock_display_mode}
+	Should Be Equal 		${output} 	\'classic\'
+	Switch To Fashion Mode
+	sleep 	1
+	${output}			Run 	${dock_display_mode}
+	Should Be Equal 		${output} 	\'fashion\'
+	[Teardown]	Write Result	23293
 
 Test Launcher Right Key Menu Boot
-	#[Tags]	${case6id}
-	#[Setup]	Get CasesID
-	#@{casesID} 	Get CasesID
-	[Tags]	${casesID[5]}
-	Open Launcher
-	Exit Launcher
+	[Tags]	${casesID[6]}
+	Menu Add To Boot
+	sleep 	2
+	Menu Remove From Boot
 	[Teardown]	Write Result	${casesID[5]}
 
 Test Launcher Right Key Menu Uninstall
-	#[Tags]	${case7id}
-	#[Setup]	Get CasesID
-	#@{casesID} 	Get CasesID
-	[Tags]	${casesID[6]}
-	Open Launcher
-	Exit Launcher
+	[Tags]	${casesID[7]}
+	Menu Uninstall
 	[Teardown]	Write Result	${casesID[6]}
