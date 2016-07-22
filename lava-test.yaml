@@ -20,6 +20,7 @@ install:
         - python-tk
         - python-pip
         - scrot
+        - wmctrl
 
     steps:
         - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U setuptools

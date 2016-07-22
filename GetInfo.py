@@ -8,6 +8,9 @@ import subprocess
 import pyautogui
 from pykeyboard import PyKeyboard
 from pymouse import PyMouse
+from Xlib import X,display
+import wnck
+import gtk
 
 k = PyKeyboard()
 m = PyMouse()
@@ -17,6 +20,18 @@ class GetInfo:
 	def __init__(self):
 		self.userPath = os.path.expanduser('~')
 		self.screenWidth, self.screenHeight = pyautogui.size()
+		self.d = display.Display()
+		self.root = self.d.screen().root
+		self.root.change_attributes(event_mask = X.SubstructureNotifyMask)
+
+	def loop(self):
+		window_changed = False
+		while True:
+			event = self.d.next_event()
+			if event.type == X.MapNotify:
+				window_changed = True
+				break
+		return window_changed
 
 	def getCenterScreenCoor(self):
 		return (self.screenWidth/2, self.screenHeight/2)
@@ -71,6 +86,16 @@ class GetInfo:
 	def getDockBottomCoor(self):
 		item_x = self.screenWidth/2
 		item_y = self.screenHeight-10
+		return (item_x,item_y)
+
+	def getDockHeight(self):
+		height = subprocess.check_output(["wmctrl -l |grep Dock |awk '{print $1}' |xargs xwininfo -id |grep Height| awk '{print $NF}'"],shell=True).decode().strip().split("\n")
+		height = ''.join(height)
+		return height
+
+	def getScreenBottom(self):
+		item_x = self.screenWidth/2
+		item_y = self.screenHeight
 		return (item_x,item_y)
 
 	def getUserPath(self):

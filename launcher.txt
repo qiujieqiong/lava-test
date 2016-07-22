@@ -28,6 +28,13 @@ ${down_key}	down
 ${enter_key}	enter
 @{open_terminal}	ctrl 	alt 	t
 @{close_window}	alt 	f4
+@{show_dock} 		winleft 	h
+@{maximize} 		winleft 	up
+@{minimize} 		winleft 	down
+@{lock} 				winleft 	l
+@{dde_session_ui} 	ctrl 	alt 	delete
+#@{special_char1} 		~ 	/ 	! 	\ \ 	@ 	\# 	\, 	\.
+@{special_char2} 			\<\
 ${getwindowname}       xdotool getactivewindow getwindowname
 ${desktop_window_name}	dde-desktop
 ${terminal_window_name}	深度终端
@@ -64,6 +71,14 @@ ${exist_in_system}		dpkg -s deepin-movie |grep Version
 ${exist_app}	dpkg -l |grep deepin-movie
 ${launcher_classification} 	gsettings get com.deepin.dde.launcher display-mode
 ${dock_display_mode} 	gsettings get com.deepin.dde.dock display-mode
+${dde_shutdown} 	ps aux |grep -w /usr/bin/dde-shutdown |grep -v grep |awk '{print $11}'
+${dde_lock} 	ps aux |grep -w /usr/bin/dde-lock |grep -v grep |awk '{print $11}'
+${simple_passwd} 	sudo su - root -c "echo deepin:a |/usr/sbin/chpasswd"
+#${special_passwd} 	sudo su - root -c "echo 'deepin:~/! @#,.<>()\\|[]' |/usr/sbin/chpasswd"
+${special_passwd} 	sudo su - root -c "echo 'qjq:<' |/usr/sbin/chpasswd"
+${add_account} 		sudo /usr/sbin/useradd -m -s /bin/bash test -G sudo
+${add_passwd} 		sudo su - root -c "echo 'test:1' |/usr/sbin/chpasswd"
+${del_account} 		sudo /usr/sbin/userdel -fr test
 ${install_deepin-movie}	sudo apt-get install -y deepin-movie\n
 ${removeconfig}           rm -f ~/.config/deepin-movie/config.ini
 ${remove_autostart_file}	rm -f ~/.config/autostart/deepin-movie.desktop
@@ -134,6 +149,17 @@ Send Single Key
 	pyautogui.press	${key}
 	#GetInfo.send_single_key 	${key}
 
+Send Mutiple Key
+	[arguments]	@{key}
+	#${key}	Encode String To Bytes	${key}	UTF-8
+	#${key}	Evaluate	str('${key}') # Also str() would work here
+	#should be byte string	${key}
+	pyautogui.hotkey	@{key}
+
+TypeWrite
+	[arguments]		${char}
+	pyautogui.typewrite 	${char}
+
 Mouse Left Click
 	[arguments]	@{coor}
 	#GetInfo.click 	${coor[0]}	${coor[1]}
@@ -184,7 +210,7 @@ Open Launcher By Cmd
 	sleep 	2
 	Assert Window Name 		深度终端
 	Sleep	2
-	pyautogui.typewrite 	dde-launcher\n 		interval=0.25
+	pyautogui.typewrite 	dde-launcher -s\n 		interval=0.25
 	Sleep	2
 	Assert Window Name 		dde-launcher
 
@@ -350,46 +376,102 @@ Switch To Fashion Mode
 	sleep 	1
 	Send Single Key 		${enter_key}
 
-Right Key Menu Click
-	[arguments]	${app_needle}	${needle_name}
-	Open Launcher And Search APP 	${app_needle}
-	Assert Screen And Click Right	${app_needle}
-	Sleep 	2
-	Assert Screen 	${menu_needle}
-	Sleep 	2
-	Assert Screen And Click 	${needle_name}
-	Sleep	2
-	Repeat Keyword 	2 times		Send Single key	${esc_key}
-	Mouse Hide
-	Sleep 	2
+Switch To Always Show
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
 
-Right Key Menu Boot Click
-        [arguments]     ${app_needle}   ${needle_name}	${icon_needle}
-        Open Launcher And Search APP    ${app_needle}
-        Assert Screen And Click Right   ${app_needle}
-        Sleep   2
-        Assert Screen   ${menu_needle}
-        Sleep   2
-        Assert Screen And Click         ${needle_name}
-        Sleep   2
-        Mouse Hide
-        Sleep   8
-	Assert Screen 	${icon_needle}
-	Repeat Keyword 	2 times 	Send Single key	${esc_key}
-        Mouse Hide
-        Sleep   2
+Switch To Always Hide
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
 
-Right Key Menu Uninstall Click
-	[arguments]	${app_needle}	${needle_name}
-	Open Launcher And Search APP 	${app_needle}
-	Assert Screen And Click Right	${app_needle}
-	Sleep 	2
-	Assert Screen 	${menu_needle}
-	Sleep 	2
-	Assert Screen And Click 	${needle_name}
-	Sleep	2
-	Assert Screen And Click 	${uninstall_btn}
-	Sleep 	15
+Switch To Smart Hide
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${down_key}
+	sleep 	1
+	Send Single Key 		${enter_key}
+
+Switch To Always Hide Teardown
+	@{coor} 	GetInfo.getScreenBottom
+	pyautogui.moveTo 	@{coor}
+	sleep 	2
+	${height} 	GetInfo.getDockHeight
+	Run Keyword If  	${height}!=1 		Switch To Always Show
+	Write Result	23298
+
+Maximize Window
+	pyautogui.hotkey 	@{maximize}
+
+Restore Window
+	pyautogui.hotkey 	@{minimize}
+
+Open App
+	[arguments] 	${app_name}
+	Open Launcher By Press Win_key
+	pyautogui.typewrite 	${app_name}\n 	interval=0.25
+	sleep 	2
+	Assert Window Name		深度终端
+
+
+Switch To Smart Hide Teardown
+	@{coor} 	GetInfo.getScreenBottom
+	pyautogui.moveTo 	@{coor}
+	sleep 	2
+	${height} 	GetInfo.getDockHeight
+	Run Keyword If  	${height}!=1 		Switch To Always Show
+	Send Mutiple Key 	@{close_window}
+	Write Result	23304
+
+Switch Account Teardown
+	Send Mutiple Key 	@{dde_session_ui}
+	sleep 	1
+	Send Single Key 	left
+	sleep 	1
+	Send Single Key 	left
+	sleep 	1
+	Send Single Key 	${enter_key}
+	sleep 	1
+	Send Single Key 	left
+	sleep 	1
+	Send Single Key 	${enter_key}
+	sleep 	1
+	${output} 	Run 	${dde_lock}
+	Run Keyword If		'${output}' == '/usr/bin/dde-lock' 		TypeWrite 		a
+	Send Single Key 	${enter_key}
+	sleep 	3
+	Assert Window Name 	dde-desktop
+	Run 	${del_account}
+	Write Result 	62720
 
 Search APP
 	[arguments]	${app_name}
@@ -526,6 +608,127 @@ Test Dock Switch Mode
 	${output}			Run 	${dock_display_mode}
 	Should Be Equal 		${output} 	\'fashion\'
 	[Teardown]	Write Result	23293
+
+Test Always Hide
+	[Tags] 	23298
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Switch To Always Hide
+	@{coor}	GetInfo.getCenterScreenCoor
+	pyautogui.moveTo 	@{coor}
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Be Equal 	${height} 	1
+	@{coor} 	GetInfo.getScreenBottom
+	pyautogui.moveTo 	@{coor}
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Not Be Equal 	${height} 	1
+	@{coor}	GetInfo.getCenterScreenCoor
+	pyautogui.moveTo 	@{coor}
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Be Equal 	${height} 	1
+	Send Single Key 	${win_key}
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Not Be Equal 	${height} 	1
+	Send Single Key 	${esc_key}
+	Send Mutiple Key 	@{show_dock}
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Not Be Equal 	${height} 	1
+	Switch To Always Show
+	[Teardown] 	Switch To Always Hide Teardown
+
+Test Smart Hide
+	[Tags] 	23304
+	@{coor} 	GetInfo.getDockBottomCoor
+	Mouse Right Click 	@{coor}
+	Switch To Smart Hide
+	@{coor}	GetInfo.getCenterScreenCoor
+	pyautogui.moveTo 	@{coor}
+	Open App 		deepin-terminal
+	Maximize Window
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Be Equal 	${height} 	1
+	Restore Window
+	sleep 	2
+	${height}		GetInfo.getDockHeight
+	Should Not Be Equal 	${height} 	1
+	[Teardown] 	Switch To Smart Hide Teardown
+
+Test Lock Screen
+	[Tags] 	23337
+	Run 		${simple_passwd}
+	Send Mutiple Key 	@{dde_session_ui}
+	sleep 	2
+	Send Single Key 	left
+	sleep 	2
+	Send Single Key 	left
+	sleep 	2
+	Send Single Key 	${enter_key}
+	sleep 	2
+	Assert Window Name 	dde-desktop
+	Send Mutiple Key 		@{lock}
+	sleep 	2
+	Assert Window Name 	dde-lock
+	Send Single Key 	a\n
+	sleep 	2
+	Assert Window Name 	dde-desktop
+
+	[Teardown] 	Write Result	23337
+
+Test Correct Password
+	[Tags] 	62691
+	Run 		${special_passwd}
+	Send Mutiple Key 		@{lock}
+	sleep 	3
+	${output} 	Run 	${dde_lock}
+	Should Be Equal 	${output} 	/usr/bin/dde-lock
+	sleep 	1
+	#log many 			@{special_char1}
+	log many			@{special_char2}
+	#Send Mutiple Key  	@{special_char1}
+	#sleep 	1
+	#ScreenShot 		password1.png
+	Send Mutiple Key 		@{special_char2}
+	sleep 	1
+	ScreenShot 		password2.png
+	sleep 	2
+	Send Single Key 		${enter_key}
+	sleep 	2
+	Assert Window Name 	dde-desktop
+	[Teardown] 	Write Result	62691
+
+Test Switch Account
+	[Tags] 	62720
+	Run 	${add_account}
+	sleep 	2
+	pyautogui.typewrite 	a
+	Send Single Key 	${enter_key}
+	Run 	${add_passwd}
+	sleep 	10
+	Send Mutiple Key 	@{dde_session_ui}
+	sleep 	2
+	Send Single Key 	left
+	sleep 	2
+	Send Single Key 	left
+	sleep 	2
+	Send Single Key 	${enter_key}
+	sleep 	2
+	Send Single Key 	right
+	sleep 	2
+	Send Single Key 	${enter_key}
+	sleep 	2
+	${output} 	Run 	${dde_lock}
+	Run Keyword If		'${output}' == '/usr/bin/dde-lock' 		TypeWrite 	 	1
+	Send Single Key 	${enter_key}
+	sleep 	3
+	Assert Window Name 	dde-desktop
+	[Teardown] 		Switch Account Teardown
+
 
 Test Launcher Right Key Menu Boot
 	[Tags]	${casesID[6]}

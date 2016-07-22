@@ -26,7 +26,7 @@ sleep 30
 ps aux |grep dde-dock |grep -v grep
 if [[ $? == 0 ]]; then
 su - $AUTO_LOGIN_USER <<EOF
-
+sudo su - root -c "echo deepin:a |/usr/sbin/chpasswd"
 export DISPLAY=:0
 export CASE_ID
 env
