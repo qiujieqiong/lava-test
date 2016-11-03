@@ -1,9 +1,9 @@
 metadata:
-    name: run-rf-cases
-    format: "Lava-Test-Shell Test Definition 1.0"
-    description: "A Test Definition To Run Robotframework Cases"
+    name: add-testcase-exectime
+    format: "Lava-Test-Shell Test Definition 2.0"
+    description: "Add testcase execution time to result.txt"
     os:
-        - ubuntu
+        - deepin
     devices:
         - vm1
     scope:
@@ -17,21 +17,11 @@ params:
 install:
     deps:
         - git
-        - python-tk
-        - python-pip
-        - scrot
-        - wmctrl
 
     steps:
-        - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U setuptools
-        - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ robotframework
-        - pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ pyuserinput
         - "mkdir -p /etc/lightdm/lightdm.conf.d"
         - 'bash -c "echo [SeatDefaults]                  >/etc/lightdm/lightdm.conf.d/auto-login.conf"'
         - 'bash -c "echo autologin-user=$AUTO_LOGIN_USER >>/etc/lightdm/lightdm.conf.d/auto-login.conf"'
-        - useradd -m deepin
-        - cat /etc/lightdm/lightdm.conf.d/auto-login.conf
-        - bash nopasswd.sh
 
 
 
@@ -39,8 +29,8 @@ run:
     steps:
         - "export AUTO_LOGIN_USER"
         - "export CASE_ID"
-        - DEBUG=yes bash RunCases.sh
-        - cp /home/$AUTO_LOGIN_USER/lava-test/test.result .
-        - cp /home/$AUTO_LOGIN_USER/lava-test/log.html .
-        - lava-test-run-attach test.result text/plain
-        - lava-test-run-attach log.html text/plain
+        - "echo $CASE_ID"
+        - "echo $CASE_ID > /tmp/id.txt"
+        - "/bin/bash run-case"
+        - "cp /home/deepin/dsystem/result.txt test.result"
+        - "lava-test-run-attach test.result text/plain"

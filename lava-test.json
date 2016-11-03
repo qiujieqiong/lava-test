@@ -4,9 +4,9 @@
             "command": "deploy_linaro_kernel",
             "parameters": {
                 "bootloadertype": "ipxe",
-                "kernel": "https://ci.deepin.io/job/rr-builder-rootfs/181/artifact/vmlinuz-4.4.0-2-deepin-amd64",
-                "nfsrootfs": "https://ci.deepin.io/job/rr-builder-rootfs/181/artifact/rootfs.tar.gz",
-                "ramdisk": "https://ci.deepin.io/job/rr-builder-rootfs/181/artifact/initrd.img-4.4.0-2-deepin-amd64",
+                "kernel": "https://ci.deepin.io/job/rr-builder-rootfs/355/artifact/vmlinuz-4.4.0-2-deepin-amd64",
+                "nfsrootfs": "https://ci.deepin.io/job/rr-builder-rootfs/355/artifact/rootfs.tar.gz",
+                "ramdisk": "https://ci.deepin.io/job/rr-builder-rootfs/355/artifact/initrd.img-4.4.0-2-deepin-amd64",
                 "target_type": "deepin"
             }
         },
@@ -21,7 +21,8 @@
                         "git-repo": "https://github.com/qiujieqiong/lava-test.git",
                         "testdef": "lava-test.yaml",
                         "parameters": {
-                            "CASE_ID": "57636,57646,57649,57652,57720,57722,57724"
+                            "AUTO_LOGIN_USER": "deepin",
+                            "CASE_ID": "45878,52149"
                         }
                     }
                 ],
@@ -37,6 +38,6 @@
         }
     ],
     "target": "104",
-    "job_name": "run-robotframework",
+    "job_name": "testcese_execduration",
     "timeout": 18000
 }
