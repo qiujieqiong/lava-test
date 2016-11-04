@@ -18,6 +18,7 @@ pwd
 ls -al
 cp /home/deepin/.Xauthority /root
 ls -al /root
+export DISPLAY=:0
 pip3 install --trusted-host pypi.doubanio.com -i http://pypi.doubanio.com/simple/ -U dogtail
 pip3 install --trusted-host pypi.doubanio.com -i http://pypi.doubanio.com/simple/ -U pyautogui
 cp tree.py /usr/local/lib/python3.5/dist-packages/dogtail
