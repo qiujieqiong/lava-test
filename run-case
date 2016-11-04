@@ -14,15 +14,11 @@ systemctl is-active lightdm >/dev/null && systemctl stop lightdm
 systemctl start lightdm
 
 python check_dde_dock.py
-pwd
-ls -al
-cp /home/deepin/.Xauthority /root
-ls -al /root
 pip3 install --trusted-host pypi.doubanio.com -i http://pypi.doubanio.com/simple/ -U dogtail
 cp tree.py /usr/local/lib/python3.5/dist-packages/dogtail
 cp predicate.py /usr/local/lib/python3.5/dist-packages/dogtail
 echo change user to $AUTO_LOGIN_USER
-su - $AUTO_LOGIN_USER -c "who; pwd; ls -l"
+su - $AUTO_LOGIN_USER -c "who; pwd; ls -al"
 su - $AUTO_LOGIN_USER -c "export DISPLAY=:0; pip3 install --trusted-host pypi.doubanio.com -i http://pypi.doubanio.com/simple/ -U pyautogui"
 su - $AUTO_LOGIN_USER -c "export DISPLAY=:0; gsettings set org.gnome.desktop.interface toolkit-accessibility true"
 su - $AUTO_LOGIN_USER -c "export DISPLAY=:0; git clone https://github.com/linuxdeepin/dsystem.git; cd dsystem && python3 lava_run.py"
